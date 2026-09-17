@@ -7,6 +7,10 @@ machines in a 205 mm footprint.
 
 Printed in ABS or ASA. Every part fits a 220 × 220 mm bed.
 
+**Status: built and in use.** Two machines sit in a prototype on a desk, and the
+assembly is fine to live with. The three structural parts are published below;
+the decorative panels are not yet.
+
 **Not affiliated with, endorsed by, or sponsored by NVIDIA.** "DGX" and "Spark"
 are trademarks of NVIDIA Corporation. This is an independent accessory.
 
@@ -79,8 +83,16 @@ plausible 10–20 CFM. The rack's contribution to the intake path is small, and
 the gap above the machine is not in that path at all: the top of the chassis is
 neither intake nor exhaust.
 
-**None of this has been measured on hardware.** It is analysis plus published
-specs. Treat it as a starting point, not a guarantee.
+**The mechanical design is built and in use.** Two machines sit in a prototype
+on a desk — they locate in the cradles, the tiers stack and hold, and the
+assembly has been fine to live with.
+
+**The numbers on this page are not the reason for that.** Every figure above is
+analysis from published specs and first principles — buoyancy, annulus pressure
+drop, the rising gap. No temperature logging has been done under sustained
+load, and the machine dimension used throughout is the published spec, not a
+measurement of the unit on the desk. Take the numbers as the reasoning behind
+the shape, not as verification of it.
 
 ## Panels
 
