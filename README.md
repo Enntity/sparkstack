@@ -1,9 +1,9 @@
 # SparkStack
 
 A stackable, modular, 3D-printable rack for the NVIDIA DGX Spark. One to four
-machines in a 205 mm footprint, with clip-on decorative panels.
+machines in a 205 mm footprint.
 
-![SparkStack, three high, dark green](sparkstack_render_hive.png)
+<img src="sparkstack_render_tower.png" alt="SparkStack, four machines high" width="420">
 
 Printed in ABS or ASA. Every part fits a 220 × 220 mm bed.
 
@@ -125,13 +125,25 @@ shrinkage moves them together and the fit is unchanged after printing.
 
 **Check the fit before you commit to a full tier.** `sparkstack.py` can generate
 a one-corner coupon — a half-height column carrying both halves of the joint —
-which is far cheaper to print than a tier. Print two and stack them. If it comes
-out wrong, `JOINT_CLR` and `RIB` are the two numbers to move.
+which is far cheaper to print than a tier. Print two and stack them.
+
+<img src="sparkstack_v3_joint_test.png" alt="Joint test coupon" width="380">
+
+If it comes out wrong, `JOINT_CLR` and `RIB` are the two numbers to move.
 
 Gold pins through each joint are optional. The holes are Ø3.4 mm and take an M3
 screw or a printed pin.
 
 ## Renders
+
+| | |
+|---|---|
+| ![](sparkstack_render_tower.png) | ![](sparkstack_render_pair.png) |
+| Four high | Two stacks of two |
+| ![](sparkstack_render_group.png) | ![](sparkstack_v3_hero.png) |
+| Both configurations | Single tier, showing the rail and cradles |
+| ![](sparkstack_render_hive.png) | ![](sparkstack_render_hive_detail.png) |
+| Dark organic finish, **panels fitted — not shipped** | Closer: webbing, drips, wordmark, pins |
 
 `render_sparkstack.py` and `render_hive.py` drive Cycles from a script — no
 HDRI, no image textures, no manual scene setup. Use the wrapper:
