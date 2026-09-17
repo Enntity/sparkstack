@@ -152,10 +152,10 @@ screw or a printed pin.
 |---|---|
 | ![](sparkstack_render_tower.png) | ![](sparkstack_render_pair.png) |
 | Four high | Two stacks of two |
-| ![](sparkstack_render_group.png) | ![](sparkstack_v3_hero.png) |
-| Both configurations | Single tier, showing the rail and cradles |
-| ![](sparkstack_render_hive.png) | ![](sparkstack_render_hive_detail.png) |
-| Dark organic finish, **panels fitted — not shipped** | Closer: webbing, drips, wordmark, pins |
+| ![](sparkstack_render_group.png) | ![](sparkstack_render_hive.png) |
+| Two stacks and a tower | Dark organic finish — **panels fitted, not shipped** |
+| ![](sparkstack_render_hive_detail.png) | |
+| Honeycomb webbing, drips, wordmark, gold pins | |
 
 `render_sparkstack.py` and `render_hive.py` drive Cycles from a script — no
 HDRI, no image textures, no manual scene setup. Use the wrapper:
