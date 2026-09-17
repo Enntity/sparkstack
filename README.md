@@ -30,14 +30,12 @@ are trademarks of NVIDIA Corporation. This is an independent accessory.
 | `sparkstack_v3_0_base.stl` | 1 |
 | `sparkstack_v3_0_tier.stl` | 1 per machine |
 | `sparkstack_v3_0_cap.stl` | 1 |
-| `sparkstack_v3_0_panel_front_T1..T4.stl` | 1 each — **four different fronts** |
-| `sparkstack_v3_0_panel_side_L.stl` | 1 per tier |
-| `sparkstack_v3_0_panel_side_R.stl` | 1 per tier |
-| `sparkstack_v3_0_joint_test.stl` | optional fit-check coupon |
 
-The four front panels are **not** interchangeable — each tier's comes from its
-own seed so a stack doesn't read as four copies of one part. The sides are
-identical across tiers, so only one of each is shipped.
+**Three parts.** A four-machine stack is one base, four tiers, one cap.
+
+The **decorative panels are not in this release.** The generator is here and the
+renders below show them fitted, but the panel STLs are not published yet — see
+*Panels* for how they work and why they need a little more time.
 
 ## Model
 
@@ -86,13 +84,22 @@ specs. Treat it as a starting point, not a guarantee.
 
 ## Panels
 
+**Not shipped yet.** The renders at the top of this README show them fitted;
+the STLs are not in this release. Everything below describes the design as
+built, so the generator in `sparkstack_panels.py` and the geometry it produces
+match what you see — but treat the panel files as unreleased until they appear
+in `stl/`.
+
+Each tier's front comes from its own seed, so a stack doesn't read as four
+copies of one part. The sides are identical across tiers.
+
 The panels are flat 4 mm plates with a hook along the bottom of the inner face
 that drops over a rail on the tier. Printed flat, the panel's inner face is up,
 so the hook is a step in the top surface — there is no overhang anywhere, which
 matters because ABS and ASA with near-zero part cooling will string and stay
 uncured on any unsupported ceiling.
 
-An earlier version put the locating groove in the tier's vertical wall instead.
+An earlier attempt put the locating groove in the tier's vertical wall instead.
 That groove's ceiling was a flat bridge and it printed badly. Hence the rail.
 
 ## Corner cradles
@@ -116,10 +123,10 @@ Bore **11.30 mm**, ribbed tenon **11.50 mm**: 0.10 mm of interference per side
 across four crush ribs over a 7 mm band. Both halves are the same material, so
 shrinkage moves them together and the fit is unchanged after printing.
 
-`sparkstack_v3_0_joint_test.stl` is a one-corner coupon with a half-height
-column that carries both halves of the joint. **Print two and stack them** to
-test the fit before committing to a full tier. If it comes out wrong,
-`JOINT_CLR` and `RIB` are the two numbers to move.
+**Check the fit before you commit to a full tier.** `sparkstack.py` can generate
+a one-corner coupon — a half-height column carrying both halves of the joint —
+which is far cheaper to print than a tier. Print two and stack them. If it comes
+out wrong, `JOINT_CLR` and `RIB` are the two numbers to move.
 
 Gold pins through each joint are optional. The holes are Ø3.4 mm and take an M3
 screw or a printed pin.

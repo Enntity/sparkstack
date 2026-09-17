@@ -35,3 +35,7 @@ sparkstack_v1_*.png
 sparkstack_v2_*.png
 sparkstack_v1_parameters.json
 sparkstack_v2_parameters.json
+
+# Panel STLs and the joint coupon: generator stays, files are unreleased.
+stl/sparkstack_v3_0_panel_*.stl
+stl/sparkstack_v3_0_joint_test.stl
