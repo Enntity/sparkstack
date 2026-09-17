@@ -1,0 +1,37 @@
+# ---- never publish these ----
+.venv/
+.uv-cache/
+.blender_home/
+__pycache__/
+*.pyc
+.DS_Store
+
+# scraped reference material, not part of the project
+research/
+
+# Third-party assets. The Spark GLB is not ours to redistribute - the render
+# scripts will tell you where to get it. See README "Renders".
+assets/
+
+# Blender scratch and supersampled render intermediates
+*.blend1
+*_ss.png
+
+# scratch renders
+_pad*.png
+_spark_solo.png
+
+# unrelated research notes living in this working directory
+3dprinter-specs-report-*.md
+creality-*.md
+printer-research-*.md
+prusa-*.md
+qidi-*.md
+snapmaker-*.md
+robot_woman_preview.png
+
+# superseded version renders - kept locally, not published
+sparkstack_v1_*.png
+sparkstack_v2_*.png
+sparkstack_v1_parameters.json
+sparkstack_v2_parameters.json
