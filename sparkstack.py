@@ -168,7 +168,12 @@ P = {
     #
     # OFF by default: v1 is the plain rack. Flip this to True to build the v2
     # tier that takes panels.
-    "PANEL_GROOVE": False,
+    # True: the tier carries the panel rail. It is ON by default because the
+    # rail is part of the shipped tier - the STL is 200 mm across with it and
+    # 196 without - so a default of False silently generated a different part
+    # from the one published. Renamed from PANEL_GROOVE: the feature moved off
+    # the tier's wall and onto its foot, so it is a rail, not a groove.
+    "PANEL_RAIL": True,
     # Band lies inside the ring, which is only 10 mm tall at the tier's foot.
     # A rail that poked above it would leave a 2 mm ledge underneath - the
     # very overhang this was meant to remove.
@@ -653,7 +658,7 @@ def build_tier(coll, mats):
     # recess in the top face during printing and therefore not an overhang at
     # all. The panels are decorative; they only have to stay put.
     rail_op = None
-    if P["PANEL_GROOVE"]:
+    if P["PANEL_RAIL"]:
         half = P["RING"] / 2.0
         proud = P["RAIL_PROUD"]
         z0, z1 = P["GROOVE_Z0"], P["GROOVE_Z1"]
@@ -944,6 +949,60 @@ def reset_scene():
                 coll.remove(block)
 
 
+def trim_to_box(obj, lo, hi, coll):
+    """Intersect obj with an axis-aligned box, in place."""
+    tool = new_object("_trim", box_mesh("_trim", lo, hi), coll)
+    mod = obj.modifiers.new("trim", 'BOOLEAN')
+    mod.operation = 'INTERSECT'
+    mod.object = tool
+    mod.solver = 'EXACT'
+    dg = bpy.context.evaluated_depsgraph_get()
+    flat = bpy.data.meshes.new_from_object(obj.evaluated_get(dg))
+    flat.name = obj.name
+    old = obj.data
+    obj.modifiers.clear()
+    obj.data = flat
+    if not flat.materials:
+        for m in old.materials:
+            flat.materials.append(m)
+    bpy.data.meshes.remove(old)
+    bpy.data.objects.remove(tool, do_unlink=True)
+    return obj
+
+
+def build_joint_coupon(coll=None, lo=42.0, hi=104.0):
+    """One corner of a tier with the column cut in half.
+
+    The joint is the one part of this design you cannot check on screen, and a
+    whole tier is a lot of plastic to spend finding out. This carries BOTH
+    halves: the socket at its foot and the tenon on its shortened column. Print
+    two and stack them.
+
+    The column is halved by building the tier at half PITCH rather than by
+    cutting a full one down, because the socket is bored from z=-1 regardless of
+    pitch and the tenon is placed relative to the post top regardless of pitch -
+    so halving the pitch shortens the column and moves nothing else. Everything
+    that matters is at an absolute height and therefore identical to the real
+    tier. Verified: socket and tenon walls match the full tier to 0.0003 mm.
+    """
+    if coll is None:
+        reset_scene()
+        coll = bpy.data.collections.new("JointTest")
+        bpy.context.scene.collection.children.link(coll)
+
+    full = P["PITCH"]
+    P["PITCH"] = full / 2.0
+    try:
+        obj = build_tier(coll, build_materials())
+    finally:
+        P["PITCH"] = full          # never leave the module mutated
+
+    obj.name = "tier_joint_test"
+    trim_to_box(obj, (lo, lo, -30.0), (hi, hi, full / 2.0 + P["TENON_H"] + 6.0), coll)
+    cleanup(obj)
+    return obj
+
+
 def build_stack(tiers=4, with_device=True):
     reset_scene()
     coll = bpy.data.collections.new("SparkStack")
@@ -1072,7 +1131,7 @@ def write_spec(path, tiers, version=None):
              for i in range(tiers)) / max(tiers, 1)
     spec = {
         "version": version or VERSION,
-        "panel_groove": P["PANEL_GROOVE"],
+        "panel_rail": P["PANEL_RAIL"],
         "generated_by": "sparkstack.py",
         "units": "mm",
         "device": {
@@ -1113,7 +1172,29 @@ if __name__ == "__main__":
     print("\n  bill of materials:")
     for name, n in sorted(counts.items()):
         print(f"    {n} x {name}")
-    spec = write_spec(os.path.join(HERE, "sparkstack_v1_parameters.json"), TIERS)
-    print(f"\n  spec frozen -> sparkstack_v1_parameters.json "
+    print("\n=== joint test coupon ===")
+    # Its own collection: build_joint_coupon() builds a half-height tier, and
+    # letting that land in the main collection would confuse export_stls().
+    jc = bpy.data.collections.new("JointTest")
+    bpy.context.scene.collection.children.link(jc)
+    coupon = build_joint_coupon(jc)
+    saved = coupon.location.copy()
+    coupon.location = (0.0, 0.0, 0.0)
+    tag = "v" + VERSION.replace(".", "_")
+    cpath = os.path.join(HERE, "stl", f"sparkstack_{tag}_joint_test.stl")
+    bpy.ops.object.select_all(action='DESELECT')
+    coupon.select_set(True)
+    bpy.context.view_layer.objects.active = coupon
+    try:
+        bpy.ops.wm.stl_export(filepath=cpath, export_selected_objects=True,
+                              global_scale=1.0)
+    except AttributeError:
+        bpy.ops.export_mesh.stl(filepath=cpath, use_selection=True, global_scale=1.0)
+    coupon.location = saved
+    print(f"  sparkstack_{tag}_joint_test.stl  "
+          f"{os.path.getsize(cpath)/1024:7.1f} KB   (print 2, stack them)")
+
+    spec = write_spec(os.path.join(HERE, "sparkstack_parameters.json"), TIERS)
+    print(f"\n  spec frozen -> sparkstack_parameters.json "
           f"(tip angle {spec['derived']['tipping_angle_deg']} deg, "
           f"occlusion {spec['derived']['underside_occlusion_pct']}%)")

@@ -274,7 +274,7 @@ def build_stack_at(x, y, tiers, coll, mats, white, panels=False):
     import importlib
     import sparkstack_panels as SP
     importlib.reload(SP)
-    SS.P["PANEL_GROOVE"] = True
+    SS.P["PANEL_RAIL"] = True
 
     objs = []
     body_mats = SS.build_materials()
