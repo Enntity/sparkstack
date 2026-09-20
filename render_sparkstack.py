@@ -246,6 +246,19 @@ def place_spark(coll, name, loc):
 def joint_pin(coll, cx, cy, z, mat):
     """One gold pin through a post joint, head outboard."""
     sgn = 1.0 if cx > 0 else -1.0
+    # FLUSH. With the rail fitted the pin exits through the rail's outer face at
+    # |x| = 100, and there is no room for a head - it would sit inside the rail.
+    # So the pin ends exactly at that face and is pushed out from the far side.
+    face = SS.P["RING"] / 2.0 + SS.P["RAIL_PROUD"]
+    body = SS.cyl_x_mesh("pin", cy, z, cx - sgn * 20.0, sgn * face, 1.6, seg=20)
+    o = SS.bake_seq("jointpin", [(body, 'u')], coll)
+    o.data.materials.append(mat)
+    return o
+
+
+def joint_pin_headed(coll, cx, cy, z, mat):
+    """Headless is the shipping case; kept for panels-off renders."""
+    sgn = 1.0 if cx > 0 else -1.0
     # The pin has to reach the ring's OUTER face. The ring is 10 mm tall at each
     # tier's foot and the pin sits 5.5 mm up, so a pin that stops at the post
     # (24 mm) is buried inside the ring and invisible. The drilled hole runs

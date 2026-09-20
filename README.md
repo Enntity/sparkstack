@@ -192,7 +192,31 @@ off them.
 ## Printing
 
 ABS or ASA. Enforced, not a preference: the design leans on those materials'
-stiffness and temperature resistance, and the profiles here are for ASA.
+stiffness and temperature resistance.
+
+Slicer profiles for both, for the FlashForge AD5M Pro with a 0.4 nozzle, in
+`profiles/` — a process profile and a filament profile for each. Import them
+together; the process profile is material-independent apart from a little extra
+warping margin.
+
+| | ASA | ABS |
+|---|---|---|
+| Nozzle | 255 °C | 250 °C |
+| Nozzle, first layer | 255 °C | 255 °C |
+| Bed | 105 °C | 105 °C |
+| Fan | 10–15% | 10–15% |
+| Brim | 6 mm | **8 mm** |
+| First layer speed | 35 mm/s | **30 mm/s** |
+| Outer wall | 120 mm/s | **100 mm/s** |
+
+Everything else is shared, including the near-zero cooling. ABS is the more
+warp-prone of the two, hence the wider brim and slower first layer — the
+**base at 205 mm** is the part that will lift if anything does.
+
+Close the enclosure and keep the room still. ABS puts out styrene while it
+prints, so ventilate the room, not the printer. Textured PEI at 105 °C, and let
+the bed cool before removing parts or you will pull the bottom face off with
+them.
 
 - Bed contact ranges 4,163–13,820 mm² across the parts
 - Overhang ≤ 2.1% on every part; there are no intentional unsupported spans

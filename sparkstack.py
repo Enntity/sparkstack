@@ -128,6 +128,14 @@ P = {
     "RIB": 0.25, "RIB_W": 1.6, "RIB_H": 7.0,
     "PIN_D": 3.4,                        # optional M3 / printed pin cross-hole
     "PIN_Z": 5.5,                        # height of the socket-side pin hole
+    # The socket-side hole is cut in the FIRST bake, but the panel rail is
+    # unioned on in the second - and the rail is solid across |x| 98..100 at
+    # z 3..9, which is exactly where the hole exits. So the rail plugs the
+    # hole: the tenon above has a clean bore and the socket below looks drilled
+    # but is capped. Turning this on re-cuts the holes AFTER the rail, giving
+    # the tier a pin you can actually insert. Off by default so the existing
+    # published STL still reproduces exactly.
+    "PIN_THROUGH_RAIL": False,
 
     # BASE_R is set so the base is proud of the tier's FOOT by the same amount
     # all the way round. At 30 the base's corner pulled in to 93.7 while the
@@ -642,8 +650,15 @@ def build_tier(coll, mats):
             cx, cy = sx * POST_C, sy * POST_C
             for m in socket_solids(cx, cy, -1.0):
                 ops.append((m, 'd'))
-            ops.append((teardrop_x_mesh("pin", cy, P["PIN_Z"], cx - 20.0, cx + 20.0,
-                                        P["PIN_D"] / 2.0), 'd'))
+            if not P["PIN_THROUGH_RAIL"]:
+                # Cut here only when the rail will NOT be added. Cutting the
+                # same bore again after the rail union leaves the two cylinder
+                # walls coincident, and a coincident surface pair is what turns
+                # a boolean watertight mesh into 101 unmatched edges. One cut,
+                # in whichever bake ends up last.
+                ops.append((teardrop_x_mesh("pin", cy, P["PIN_Z"],
+                                            cx - 20.0, cx + 20.0,
+                                            P["PIN_D"] / 2.0), 'd'))
 
     # Panel groove, cut as its own compound tool (outer ring minus inner ring)
     # because bake_seq applies all unions before all differences, so it cannot
@@ -692,6 +707,16 @@ def build_tier(coll, mats):
                 second.append((bake_to_mesh("cradle", [(x, 'u') for x in cr]), 'u'))
     if rail_op:
         second.append(rail_op)
+    if P["PIN_THROUGH_RAIL"]:
+        # Re-cut the socket-side pin holes now the rail exists, or the rail
+        # caps them. Same axis, same diameter - this only removes the 2 mm of
+        # rail that was blocking the opening.
+        for sx in (-1, 1):
+            for sy in (-1, 1):
+                cx, cy = sx * POST_C, sy * POST_C
+                second.append((teardrop_x_mesh("pin_open", cy, P["PIN_Z"],
+                                               cx - 20.0, cx + 20.0,
+                                               P["PIN_D"] / 2.0), 'd'))
     if len(second) > 1:
         # Free the name first, or Blender renames the merged object tier.001 and
         # everything downstream that looks "tier" up by name fails.
