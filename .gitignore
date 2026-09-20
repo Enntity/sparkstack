@@ -42,7 +42,3 @@ stl/sparkstack_v3_0_joint_test.stl
 
 # generated on every run; sparkstack.py is the source of truth
 sparkstack_parameters.json
-
-# pin-through-rail tier variant: built locally, publishing not yet decided
-stl/sparkstack_v3_0_tier_pinned.stl
-sparkstack_pin_detail.png

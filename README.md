@@ -34,8 +34,11 @@ are trademarks of NVIDIA Corporation. This is an independent accessory.
 | `sparkstack_v3_0_base.stl` | 1 |
 | `sparkstack_v3_0_tier.stl` | 1 per machine |
 | `sparkstack_v3_0_cap.stl` | 1 |
+| `sparkstack_v3_0_tier_pinned.stl` | optional — the tier with the pin bore opened through the rail. **See The joint** |
 
-**Three parts.** A four-machine stack is one base, four tiers, one cap.
+**Three parts.** A four-machine stack is one base, four tiers, one cap. The
+`tier_pinned` file is the same tier with one bore opened up; print it instead of
+`tier` if you want to use pins.
 
 The **decorative panels are not in this release.** The generator is here and the
 renders below show them fitted, but the panel STLs are not published yet — see
@@ -143,8 +146,33 @@ which is far cheaper to print than a tier. Print two and stack them.
 
 If it comes out wrong, `JOINT_CLR` and `RIB` are the two numbers to move.
 
-Gold pins through each joint are optional. The holes are Ø3.4 mm and take an M3
-screw or a printed pin.
+Gold pins through each joint are optional.
+
+### Which tier to print
+
+There are two, and the difference is one bore.
+
+The pin runs along X through a post, and at the joint it has to pass through
+three things: the tier's socket wall, the ring, **and the panel rail**. The rail
+is unioned on *after* the socket is bored, and it is solid across |x| 98–100 at
+z 3–9 — exactly where the pin exits. So on `tier.stl` the rail caps the hole:
+the tenon above has a clean bore, the socket below looks drilled, and a pin will
+not go in.
+
+`tier_pinned.stl` cuts that bore once, after the rail. Verified: a clean 3.4 mm
+opening at z 4.0–7.0, identical to `tier.stl` everywhere else, same 200 × 200
+footprint, same rail.
+
+The base and the cap have no rail, so their bores were never capped and they are
+fine as they are.
+
+<img src="sparkstack_pin_detail.png" alt="Flush pin in the rail face" width="560">
+
+**Pins must be flush.** With the rail fitted there is no room for a head — it
+would sit inside the rail. And a flush pin has nothing to grab: its inner end is
+buried in the post, so you cannot push it out from the far side either. Use an
+**M3 screw**, which the Ø3.4 bore already clears, or leave a small recess at the
+outer end to pick at.
 
 ## Renders
 
